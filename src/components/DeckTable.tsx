@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 
 interface Flashcard {
@@ -10,14 +10,31 @@ interface Flashcard {
   isNew?: boolean
 }
 
-export default function DeckTable({ flashcards }: { flashcards: Flashcard[] }) {
+export default function DeckTable({ deckId }: { deckId: string }) {
     const params = useParams()
-    const [rows, setRows] = useState<Flashcard[]>(flashcards)
+    const [rows, setRows] = useState<Flashcard[]>([])
     const [error, setError] = useState<string | null>(null)
     const [editingIndex, setEditingIndex] = useState<number | null>(null)
     const [editCache, setEditCache] = useState<{ question: string; answer: string } | null>(null)
     const [showPopup, setShowPopup] = useState(false)
+    const [loading, setLoading] = useState(true)
 
+    useEffect(() => {
+        const fetchFlashcards = async () => {
+            if (!deckId) return
+            setLoading(true)
+            try {
+                const res = await fetch(`/api/decks/${deckId}/flashcards`)
+                const data = await res.json()
+                setRows(data.flashcards || [])
+            } catch (err) {
+                console.error('Failed to load flashcards:', err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchFlashcards()
+    }, [deckId]) // runs once on mount, or if deckId changes
     
     const handleAddRow = () => {
         setRows(prev => [
@@ -75,7 +92,6 @@ export default function DeckTable({ flashcards }: { flashcards: Flashcard[] }) {
 
     const handleDelete = async (index: number, flashcardId: any) => {
         try {
-            console.log(`Deleting flashcard with ID: ${flashcardId}`)
             const res = await fetch(`/api/decks/${params.id}/flashcards/${flashcardId}`, {
                 method: 'DELETE',
             })
@@ -140,15 +156,15 @@ export default function DeckTable({ flashcards }: { flashcards: Flashcard[] }) {
     }
     const fetchFlashcards = async () => {
         try {
-            const res = await fetch(`/decks/${params.id}`)
+            const res = await fetch(`/api/decks/${params.id}/flashcards`)
             const data = await res.json()
-            console.log('Fetched flashcards:', data)
+
             if (!res.ok) {
-                setError(data.message || 'Failed to fetch flashcards')
-                return
+            setError(data.message || 'Failed to fetch flashcards')
+            return
             }
 
-            setRows(data.deck.flashcards) // or data.flashcards if separated
+            setRows(data.flashcards)
         } catch (err) {
             setError('Error loading flashcards')
         }
@@ -277,3 +293,7 @@ export default function DeckTable({ flashcards }: { flashcards: Flashcard[] }) {
     </div>
   )
 }
+function setLoading(arg0: boolean) {
+    throw new Error('Function not implemented.')
+}
+

@@ -1,51 +1,50 @@
 'use client'
 
 import Link from 'next/link'
-import { cn } from '@/lib/utils' // optional helper for class merging
-
-type DeckCardProps = {
-  id: string
+import { useEffect, useState } from 'react'
+type Deck = {
+  _id: string
   title: string
-  description?: string
-  cardCount?: number
-  tags?: string[]
-  className?: string
+  description: string
+  flashcards?: string[]
 }
 
-export default function DeckCard({
-  id,
-  title,
-  description,
-  cardCount = 0,
-  tags = [],
-  className = '',
-}: DeckCardProps) {
+export default function DeckCard() {
+    const [decks, setDecks] = useState<Deck[]>([])
+    const [loading, setLoading] = useState(true)
+    useEffect(() => {
+        fetch('/api/decks')
+          .then(res => res.json())
+          .then(data => {
+            setDecks(data)
+            setLoading(false)
+          })
+          .catch(err => {
+            console.error('Error fetching decks:', err)
+            setLoading(false)
+          })
+      }, [])
+    
   return (
-    <Link href={`/decks/${id}`}>
-      <div
-        className={cn(
-          'bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all cursor-pointer',
-          className
-        )}
-      >
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        {description && (
-          <p className="text-sm text-gray-600 line-clamp-2">{description}</p>
-        )}
-        <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-          <span>{cardCount} card{cardCount === 1 ? '' : 's'}</span>
-          <div className="flex gap-1 flex-wrap">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="bg-gray-100 px-2 py-0.5 rounded-full text-xs text-gray-700"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
+        <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-4">My Decks</h1>
+
+      {loading && <p>Loading decks...</p>}
+      {!loading && decks.length === 0 && <p>No decks found.</p>}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {decks.map(deck => (
+          <Link
+            key={deck._id}
+            href={`/decks/${deck._id}`}
+            className="block rounded-xl border p-4 shadow hover:shadow-md transition"
+          >
+            <h2 className="text-xl font-semibold">{deck.title}</h2>
+            <p className="text-gray-600">{deck.description}</p>
+            <p>{deck.flashcards ? deck.flashcards.length : 0} flashcards</p>
+          </Link>
+        ))}
       </div>
-    </Link>
+    </div>
   )
 }

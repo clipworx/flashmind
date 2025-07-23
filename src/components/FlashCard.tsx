@@ -7,16 +7,16 @@ type FlashcardProps = {
   question: string
   answer: string
   className?: string
-  onNext: () => void
+  onNext: (isCorrect: boolean) => void
 }
 
 export default function Flashcard({ question, answer, className, onNext }: FlashcardProps) {
   const [flipped, setFlipped] = useState(false)
 
-  const handleNext = () => {
+  const handleNext = (isCorrect: boolean) => {
     setFlipped(false)
     setTimeout(() => {
-      onNext()
+      onNext(isCorrect)
     }, 300) // delay for flip animation
   }
 
@@ -50,13 +50,13 @@ export default function Flashcard({ question, answer, className, onNext }: Flash
       {/* Answer Buttons */}
       <div className="flex justify-center gap-4">
         <button
-          onClick={handleNext}
+          onClick={() => handleNext(true)}
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
         >
           Correct
         </button>
         <button
-          onClick={handleNext}
+          onClick={() => handleNext(false)}
           className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
         >
           Incorrect

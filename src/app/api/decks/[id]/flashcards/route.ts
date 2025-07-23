@@ -24,15 +24,22 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 }
 
 // GET: Retrieve all flashcard
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_: Request, { params }: { params: { id: string } }) {
   await connectDB()
 
-  const deck = await Deck.findById(params.id)
-  if (!deck) {
+  const deck = await Deck.findById(params.id).lean()
+
+  if (!deck || Array.isArray(deck) || !deck.flashcards) {
     return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
   }
 
-  return NextResponse.json(deck.flashcards)
+  return NextResponse.json({
+    flashcards: deck.flashcards.map((fc: any) => ({
+      _id: fc._id.toString(),
+      question: fc.question,
+      answer: fc.answer,
+    })),
+  })
 }
 
 // PATCH: Update a flashcard
