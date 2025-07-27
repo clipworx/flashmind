@@ -22,7 +22,7 @@ export default function DeckView() {
   useEffect(() => {
     const fetchDeck = async () => {
       if (!params?.id) return
-      const response = await fetch(`/api/decks/${params.id}`)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decks/${params.id}`)
       const data = await response.json()
       setDeck(data)
     }

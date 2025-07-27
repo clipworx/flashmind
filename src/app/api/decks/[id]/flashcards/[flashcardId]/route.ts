@@ -5,17 +5,17 @@ import { Deck } from '@/models/Deck'
 // PATCH: Update a flashcard inside a deck
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string; flashcardId: string } }
+  context: { params: { id: string; flashcardId: string } }
 ) {
   await connectDB()
   const { question, answer } = await req.json()
 
-  const deck = await Deck.findById(params.id)
+  const deck = await Deck.findById(context.params.id)
   if (!deck) {
     return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
   }
 
-  const flashcard = deck.flashcards.id(params.flashcardId)
+  const flashcard = deck.flashcards.id(context.params.flashcardId)
   if (!flashcard) {
     return NextResponse.json({ message: 'Flashcard not found' }, { status: 404 })
   }
@@ -30,16 +30,16 @@ export async function PATCH(
 // DELETE: Remove a flashcard inside a deck
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string; flashcardId: string } }
+  context: { params: { id: string; flashcardId: string } }
 ) {
   await connectDB()
 
-  const deck = await Deck.findById(params.id)
+  const deck = await Deck.findById(context.params.id)
   if (!deck) {
     return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
   }
 
-  const flashcard = deck.flashcards.id(params.flashcardId)
+  const flashcard = deck.flashcards.id(context.params.flashcardId)
   if (!flashcard) {
     return NextResponse.json({ message: 'Flashcard not found' }, { status: 404 })
   }

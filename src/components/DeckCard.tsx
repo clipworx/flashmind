@@ -11,11 +11,12 @@ type Deck = {
 }
 
 export default function DeckCard() {
+
   const [decks, setDecks] = useState<Deck[]>([])
   const [loading, setLoading] = useState(true)
   const notify = useToastStore(state => state.notify)
   useEffect(() => {
-      fetch('/api/decks')
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/decks`)
         .then(res => res.json())
         .then(data => {
           setDecks(data)

@@ -7,33 +7,36 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+
   try {
     await connectDB()
 
-    if (!mongoose.Types.ObjectId.isValid(params.id)) {
+    const id = params.id
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ message: 'Invalid ID' }, { status: 400 })
     }
 
-    const deck = await Deck.findById(params.id).lean()
-    
+    const deck = await Deck.findById(id).lean()
+
     if (!deck) {
       return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
     }
 
     return NextResponse.json(deck)
   } catch (err) {
-    console.error(`GET /api/decks/${params.id} error:`, err)
+    console.error(err)
     return NextResponse.json({ message: 'Server error' }, { status: 500 })
   }
 }
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   await connectDB()
 
-  const deck = await Deck.findById(params.id)
+  const deck = await Deck.findById(context.params.id)
   if (!deck) {
     return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
   }

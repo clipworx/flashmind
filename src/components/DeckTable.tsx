@@ -26,7 +26,7 @@ export default function DeckTable({ deckId }: { deckId: string }) {
             if (!deckId) return
             setLoading(true)
             try {
-                const res = await fetch(`/api/decks/${deckId}/flashcards`)
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decks/${deckId}/flashcards`)
                 const data = await res.json()
                 setRows(data.flashcards || [])
             } catch (err) {
@@ -55,7 +55,7 @@ export default function DeckTable({ deckId }: { deckId: string }) {
             const fc = rows[index]
         if (!flashcardId) return
 
-        const res = await fetch(`/api/decks/${params.id}/flashcards/${flashcardId}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decks/${params.id}/flashcards/${flashcardId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ question: fc.question, answer: fc.answer }),
@@ -98,7 +98,7 @@ export default function DeckTable({ deckId }: { deckId: string }) {
 
     const handleDelete = async (index: number, flashcardId: any) => {
         try {
-            const res = await fetch(`/api/decks/${params.id}/flashcards/${flashcardId}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decks/${params.id}/flashcards/${flashcardId}`, {
                 method: 'DELETE',
             })
 
@@ -138,7 +138,7 @@ export default function DeckTable({ deckId }: { deckId: string }) {
         }
 
         try {
-            const res = await fetch(`/api/decks/${params.id}/flashcards`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decks/${params.id}/flashcards`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -161,7 +161,7 @@ export default function DeckTable({ deckId }: { deckId: string }) {
     }
     const fetchFlashcards = async () => {
         try {
-            const res = await fetch(`/api/decks/${params.id}/flashcards`)
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decks/${params.id}/flashcards`)
             const data = await res.json()
 
             if (!res.ok) {
