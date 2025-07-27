@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import DeckTable from '@/components/DeckTable'
+import DeckTable from '@/components/Decks/DeckTable'
 import { useEffect, useState, use } from 'react'
 import { useParams } from 'next/navigation'
 

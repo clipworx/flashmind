@@ -1,6 +1,6 @@
 'use client'
 
-import FlashCardNew from "@/components/FlashCardNew"
+import FlashCardNew from "@/components/FlashCards/FlashCardNew"
 
 export default function NewFlashcardPage() {
 

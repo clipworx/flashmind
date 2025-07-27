@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import Flashcard from '@/components/FlashCard'
+import Flashcard from '@/components/FlashCards/FlashCard'
 
 type Flashcard = {
   question: string

@@ -1,4 +1,3 @@
-// stores/toastStore.ts
 import { create } from 'zustand'
 
 type ToastType = 'success' | 'error' | 'info'

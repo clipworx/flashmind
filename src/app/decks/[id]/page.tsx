@@ -1,6 +1,6 @@
 'use client'
 
-import DeckView from '@/components/DeckView'
+import DeckView from '@/components/Decks/DeckView'
 
 export default function DeckPage() {
  

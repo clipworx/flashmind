@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import FlashMindNavBar from '@/components/FlashMindNavBar'
-import ToastContainer from '@/components/ToastContainer'
+import FlashMindNavBar from '@/components/FlashCards/FlashMindNavBar'
+import ToastContainer from '@/components/Notifications/ToastContainer'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
