@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
+import { useToastStore } from '@/stores/toastStore'
 
 interface Flashcard {
   _id: number
@@ -18,6 +19,7 @@ export default function DeckTable({ deckId }: { deckId: string }) {
     const [editCache, setEditCache] = useState<{ question: string; answer: string } | null>(null)
     const [showPopup, setShowPopup] = useState(false)
     const [loading, setLoading] = useState(true)
+    const notify = useToastStore(state => state.notify)
 
     useEffect(() => {
         const fetchFlashcards = async () => {
@@ -49,7 +51,8 @@ export default function DeckTable({ deckId }: { deckId: string }) {
     }
 
     const handleUpdate = async (index: number, flashcardId: any) => {
-        const fc = rows[index]
+        try {
+            const fc = rows[index]
         if (!flashcardId) return
 
         const res = await fetch(`/api/decks/${params.id}/flashcards/${flashcardId}`, {
@@ -59,13 +62,11 @@ export default function DeckTable({ deckId }: { deckId: string }) {
         })
 
         if (!res.ok) {
-            const data = await res.json()
-            setError(data.message || 'Failed to update')
-            return
+            throw new Error('Failed to update flashcard')
         }
 
         const data = await res.json()
-
+        notify({message:'Flashcard updated successfully!', type:'success'})
         setRows(prev => {
             const updated = [...prev]
             updated[index] = data.flashcard
@@ -74,6 +75,11 @@ export default function DeckTable({ deckId }: { deckId: string }) {
 
         setEditingIndex(null)
         setEditCache(null)
+        } catch (err) {
+            notify({message:'Failed to update flashcard', type:'error'})
+            console.error('Failed to update flashcard:', err)
+        }
+        
     }
 
     const handleCancelEdit = () => {
@@ -97,17 +103,17 @@ export default function DeckTable({ deckId }: { deckId: string }) {
             })
 
             if (!res.ok) {
-                const data = await res.json()
-                setError(data.message || 'Delete failed')
-                return
+                throw new Error('Failed to delete flashcard')
             }
 
             const updatedRows = [...rows]
             updatedRows.splice(index, 1)
+            notify({message:'Flashcard deleted successfully!', type:'success'})
+            setEditingIndex(null)
             setRows(updatedRows)
         } catch (err) {
             console.error(err)
-            setError('Delete failed')
+            notify({message:'Failed to delete flashcard', type:'error'})
         }
     }
 
@@ -133,25 +139,24 @@ export default function DeckTable({ deckId }: { deckId: string }) {
 
         try {
             const res = await fetch(`/api/decks/${params.id}/flashcards`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                question: flashcard.question,
-                answer: flashcard.answer,
-            }),
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    question: flashcard.question,
+                    answer: flashcard.answer,
+                }),
             })
 
             const data = await res.json()
 
             if (!res.ok) {
-            setError(data.message || 'Something went wrong')
-            return
+                throw new Error(data.message || 'Failed to save flashcard')
             }
-
-            // ✅ Refetch updated flashcard list from backend
+            notify({message:'Flashcard saved successfully!', type:'success'})
             await fetchFlashcards()
         } catch (err) {
-            setError('Failed to save flashcard.')
+            console.error('Failed to save flashcard:', err)
+            notify({message:'Failed to save flashcard', type:'error'})
         }
     }
     const fetchFlashcards = async () => {

@@ -1,9 +1,9 @@
 'use client'
-import NewDeck from '../../components/NewDeck';
+import DeckNew from '../../../components/DeckNew';
 
 export default function CreateDeckPage() {
 
   return (
-    <NewDeck />
+    <DeckNew />
   )
 }

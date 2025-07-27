@@ -26,3 +26,19 @@ export async function GET(
     return NextResponse.json({ message: 'Server error' }, { status: 500 })
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  await connectDB()
+
+  const deck = await Deck.findById(params.id)
+  if (!deck) {
+    return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
+  }
+
+  await deck.deleteOne()
+
+  return NextResponse.json({ message: 'Deck deleted' })
+}

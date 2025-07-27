@@ -7,8 +7,7 @@ import { cn } from '@/lib/utils'
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Decks', href: '/decks' },
-  { label: 'Review', href: '/review' },
-  { label: 'Create', href: '/create' },
+  { label: 'Create', href: '/decks/create' }
 ]
 
 export default function Navbar() {

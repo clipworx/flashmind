@@ -1,12 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-
-export default function NewDeck() {
+import { useToastStore } from '@/stores/toastStore'
+export default function DeckNew() {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [tags, setTags] = useState<string[]>([])
     const [tagInput, setTagInput] = useState('')
+    const notify = useToastStore(state => state.notify)
 
     function handleAddTag() {
         if (tagInput && !tags.includes(tagInput)) {
@@ -28,15 +29,16 @@ export default function NewDeck() {
             })
 
             if (!res.ok) {
-                throw new Error('Failed to create deck')
+              throw new Error('Failed to create deck')
             }
-
+            
             const created = await res.json()
             console.log('Deck created:', created)
-
+            notify({ message: 'Deck created successfully!', type: 'success' })
             // Redirect or show success message
             window.location.href = `/decks/${created._id}`
         } catch (err) {
+            notify({ message: 'Failed to create deck', type: 'error' })
             console.error('Submit error:', err)
         }
     }
