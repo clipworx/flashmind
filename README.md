@@ -34,7 +34,7 @@ Flashmind is a **minimal, smart flashcard web app** built with **Next.js**, desi
 1. **Clone the repo**
 
    ```bash
-   git clone https://github.com/your-username/flashmind.git
+   git clone https://github.com/clipworx/flashmind.git
    cd flashmind
    ```
 
