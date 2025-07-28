@@ -49,7 +49,7 @@ Flashmind is a **minimal, smart flashcard web app** built with **Next.js**, desi
    Create a `.env.local` file for your frontend and `.env` for your backend:
 
    ```env
-   NEXT_PUBLIC_API_URL=http://localhost:3000
+   NEXT_PUBLIC_API_URL=http://localhost:3000/api
    OPENAI_API_KEY=your-key-here
    MONGODB_URI=your-mongodb-uri
    ```
