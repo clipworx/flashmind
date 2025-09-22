@@ -32,14 +32,15 @@ export async function DELETE(
   req: NextRequest,
   context: { params: { id: string; flashcardId: string } }
 ) {
+  const { id, flashcardId } = context.params;
   await connectDB()
 
-  const deck = await Deck.findById(context.params.id)
+  const deck = await Deck.findById(id)
   if (!deck) {
     return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
   }
 
-  const flashcard = deck.flashcards.id(context.params.flashcardId)
+  const flashcard = deck.flashcards.id(flashcardId)
   if (!flashcard) {
     return NextResponse.json({ message: 'Flashcard not found' }, { status: 404 })
   }
