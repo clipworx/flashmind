@@ -35,6 +35,7 @@ export async function GET( req: NextRequest, context: { params: { id: string } }
   }
 
   return NextResponse.json({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     flashcards: deck.flashcards.map((fc: any) => ({
       _id: fc._id.toString(),
       question: fc.question,
