@@ -1,47 +1,56 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/db'
 import { Deck } from '@/models/Deck'
-import mongoose from 'mongoose'
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+type Params = {
+  id: string;
+};
 
+// GET: Get a specific deck
+export async function GET(req: NextRequest, { params }: { params: Promise<Params> }) {
+  const { id } = await params;
+  await connectDB()
+  
   try {
-    await connectDB()
-
-    const id = params.id
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json({ message: 'Invalid ID' }, { status: 400 })
-    }
-
-    const deck = await Deck.findById(id).lean()
-
+    const deck = await Deck.findById(id)
     if (!deck) {
       return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
     }
-
     return NextResponse.json(deck)
-  } catch (err) {
-    console.error(err)
-    return NextResponse.json({ message: 'Server error' }, { status: 500 })
+  } catch (error) {
+    return NextResponse.json({ message: 'Error fetching deck' }, { status: 500 })
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  context: { params: { id: string } }
-) {
+// PUT/PATCH: Update a specific deck
+export async function PUT(req: NextRequest, { params }: { params: Promise<Params> }) {
+  const { id } = await params;
   await connectDB()
-
-  const deck = await Deck.findById(context.params.id)
-  if (!deck) {
-    return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
+  
+  try {
+    const body = await req.json()
+    const deck = await Deck.findByIdAndUpdate(id, body, { new: true })
+    if (!deck) {
+      return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
+    }
+    return NextResponse.json(deck)
+  } catch (error) {
+    return NextResponse.json({ message: 'Error updating deck' }, { status: 500 })
   }
+}
 
-  await deck.deleteOne()
-
-  return NextResponse.json({ message: 'Deck deleted' })
+// DELETE: Delete a specific deck
+export async function DELETE(req: NextRequest, { params }: { params: Promise<Params> }) {
+  const { id } = await params;
+  await connectDB()
+  
+  try {
+    const deck = await Deck.findByIdAndDelete(id)
+    if (!deck) {
+      return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
+    }
+    return NextResponse.json({ message: 'Deck deleted successfully' })
+  } catch (error) {
+    return NextResponse.json({ message: 'Error deleting deck' }, { status: 500 })
+  }
 }

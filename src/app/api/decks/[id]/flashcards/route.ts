@@ -3,8 +3,14 @@ import { connectDB } from '@/lib/db'
 import { Deck } from '@/models/Deck'
 
 export const runtime = 'nodejs'
+
+type Params = {
+  id: string;
+};
+
 // POST: Add a flashcard
-export async function POST(req: NextRequest, context: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<Params> }) {
+  const { id } = await params;
   await connectDB()
   const { question, answer } = await req.json()
 
@@ -12,7 +18,7 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
     return NextResponse.json({ message: 'Missing fields' }, { status: 400 })
   }
 
-  const deck = await Deck.findById(context.params.id)
+  const deck = await Deck.findById(id)
   if (!deck) {
     return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
   }
@@ -24,10 +30,9 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
 }
 
 // GET: Retrieve all flashcard
-export async function GET( req: NextRequest, context: { params: { id: string } }) {
-
+export async function GET(req: NextRequest, { params }: { params: Promise<Params> }) {
+  const { id } = await params;
   await connectDB()
-  const id = context.params.id
   const deck = await Deck.findById(id).lean()
 
   if (!deck || Array.isArray(deck) || !deck.flashcards) {
@@ -45,7 +50,8 @@ export async function GET( req: NextRequest, context: { params: { id: string } }
 }
 
 // PATCH: Update a flashcard
-export async function PATCH(req: NextRequest, context: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<Params> }) {
+  const { id } = await params;
   await connectDB()
   const { index, question, answer } = await req.json()
 
@@ -53,7 +59,7 @@ export async function PATCH(req: NextRequest, context: { params: { id: string } 
     return NextResponse.json({ message: 'Invalid index' }, { status: 400 })
   }
 
-  const deck = await Deck.findById(context.params.id)
+  const deck = await Deck.findById(id)
   if (!deck || !deck.flashcards[index]) {
     return NextResponse.json({ message: 'Flashcard not found' }, { status: 404 })
   }
@@ -66,7 +72,8 @@ export async function PATCH(req: NextRequest, context: { params: { id: string } 
 }
 
 // DELETE: Delete a flashcard
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<Params> }) {
+  const { id } = await params;
   await connectDB()
   const { index } = await req.json()
 
@@ -74,7 +81,7 @@ export async function DELETE(req: NextRequest, context: { params: { id: string }
     return NextResponse.json({ message: 'Invalid index' }, { status: 400 })
   }
 
-  const deck = await Deck.findById(context.params.id)
+  const deck = await Deck.findById(id)
   if (!deck || !deck.flashcards[index]) {
     return NextResponse.json({ message: 'Flashcard not found' }, { status: 404 })
   }

@@ -98,7 +98,7 @@ export default function DeckTable({ deckId }: { deckId: string }) {
 
     const handleDelete = async (index: number, flashcardId: any) => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decks/${params.id}/flashcards/${flashcardId}`, {
+            const res = await fetch(`/api/decks/${params.id}/flashcards/${flashcardId}`, {
                 method: 'DELETE',
             })
 
