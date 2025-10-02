@@ -16,7 +16,7 @@ export default function DeckCard() {
   const [loading, setLoading] = useState(true)
   const notify = useToastStore(state => state.notify)
   useEffect(() => {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/decks`)
+      fetch(`/api/decks`)
         .then(res => res.json())
         .then(data => {
           setDecks(data)

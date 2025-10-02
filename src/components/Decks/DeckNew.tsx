@@ -22,7 +22,7 @@ export default function DeckNew() {
         const newDeck = { title, description, tags }
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decks`, {
+            const res = await fetch(`/api/decks`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newDeck),

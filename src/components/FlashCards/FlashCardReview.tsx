@@ -18,7 +18,7 @@ export default function FlashCardReview() {
 
   useEffect(() => {
     async function fetchFlashcards() {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decks/${params.id}/flashcards`)
+      const res = await fetch(`/api/decks/${params.id}/flashcards`)
       if (res.ok) {
         const data = await res.json()
         setFlashcards(data.flashcards)

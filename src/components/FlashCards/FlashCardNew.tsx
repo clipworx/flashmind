@@ -16,7 +16,7 @@ export default function NewFlashcardPage() {
             e.preventDefault()
             setLoading(true)
 
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decks/${params.id}/flashcards`, {
+            const res = await fetch(`/api/decks/${params.id}/flashcards`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ question, answer }),
