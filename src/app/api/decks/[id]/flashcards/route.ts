@@ -4,8 +4,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/db'
 import { Deck } from '@/models/Deck'
 
-export const runtime = 'nodejs'
-
 type Params = {
   id: string;
 };
