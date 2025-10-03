@@ -1,4 +1,5 @@
 import mongoose, { Schema, model, models } from 'mongoose'
+import { User } from '@/models/User'
 
 const FlashcardSchema = new Schema({
   question: { type: String, required: true },
@@ -11,6 +12,7 @@ const DeckSchema = new Schema(
     description: { type: String, default: '' },
     tags: { type: [String], default: [] },
     flashcards: { type: [FlashcardSchema], default: [] },
+    createdBy: { type: Schema.Types.ObjectId, ref: User },
   },
   { timestamps: true }
 )

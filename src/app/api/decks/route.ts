@@ -1,15 +1,29 @@
 import { NextResponse } from 'next/server'
 import { connectDB } from '@/lib/db'
 import { Deck } from '@/models/Deck'
+import { getUserFromCookie } from '@/lib/auth'
+
 
 export async function POST(req: Request) {
   try {
     await connectDB()
+
+    const user = await getUserFromCookie()
+    if (!user) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+    }
+
     const body = await req.json()
     const { title, description, tags } = body
 
-    const newDeck = await Deck.create({ title, description, tags })
-    return NextResponse.json(newDeck, { status: 201 })
+    const deck = await Deck.create({
+      title,
+      description,
+      tags,
+      createdBy: user.userId,
+    })
+
+    return NextResponse.json(deck, { status: 201 })
   } catch (err) {
     console.error('POST /api/decks error:', err)
     return NextResponse.json({ message: 'Server error' }, { status: 500 })
@@ -17,12 +31,13 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
-  try {
-    await connectDB()
-    const decks = await Deck.find().sort({ createdAt: -1 }) // Newest first
-    return NextResponse.json(decks)
-  } catch (err) {
-    console.error('GET /api/decks error:', err)
-    return NextResponse.json({ message: 'Server error' }, { status: 500 })
+  await connectDB()
+
+  const user = await getUserFromCookie()
+  if (!user) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
   }
+
+  const decks = await Deck.find({ createdBy: user.userId }).lean()
+  return NextResponse.json(decks)
 }

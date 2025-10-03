@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 const navItems = [
-  { label: 'Home', href: '/' },
+  { label: 'Home', href: '/home' },
   { label: 'Decks', href: '/decks' },
   { label: 'Create', href: '/decks/create' }
 ]
@@ -17,7 +17,7 @@ export default function Navbar() {
     <nav className="w-full px-6 py-4 bg-white border-b border-gray-200">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         {/* App Name */}
-        <Link href="/" className="text-xl font-bold text-blue-600">
+        <Link href="/home" className="text-xl font-bold text-blue-600">
           Flashmind
         </Link>
 

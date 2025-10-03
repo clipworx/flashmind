@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/db'
 import { Deck } from '@/models/Deck'
+import { getUserFromCookie } from '@/lib/auth';
 
 type Params = {
   id: string;
@@ -42,13 +43,24 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<Params
 // DELETE: Delete a specific deck
 export async function DELETE(req: NextRequest, { params }: { params: Promise<Params> }) {
   const { id } = await params;
-  await connectDB()
   
   try {
-    const deck = await Deck.findByIdAndDelete(id)
+    await connectDB()
+
+    const user = await getUserFromCookie()
+    if (!user) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+    }
+
+    const deck = await Deck.findOneAndDelete({
+      _id: id,
+      createdBy: user.userId,
+    })
+
     if (!deck) {
       return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
     }
+    
     return NextResponse.json({ message: 'Deck deleted successfully' })
   } catch (error) {
     return NextResponse.json({ message: 'Error deleting deck' }, { status: 500 })
