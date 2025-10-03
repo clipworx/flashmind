@@ -22,22 +22,31 @@ export const metadata: Metadata = {
   description: "A flashcard app for learning",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const token = (await cookies()).get("token")?.value;
+  const checkToken = async () => {
+    const token = (await cookies()).get("token")?.value;
+    if(!token) return false;
+    return true;
 
+  }
+  const hasToken = checkToken()
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* {token && <FlashMindNavBar />}
-        {token && <ToastContainer />}
-        <main className="p-6">{children}</main> */}
-        sdkljaskldjaslkd
+        {hasToken.then(res => res && (
+          <>
+            <FlashMindNavBar />
+            <ToastContainer />
+          </>
+        )).catch(() => null)}
+
+        <main className="p-6">{children}</main>
       </body>
     </html>
   );
