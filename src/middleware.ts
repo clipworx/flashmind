@@ -20,5 +20,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/api/lists/:path*', '/api/decks/:path*', '/lists/:path*', '/decks/:path*', '/home'] // protect these APIs
+  matcher: ['/api/lists/:path*', '/api/decks/:path*', '/lists/:path*', '/decks/:path*', '/home', '/'] // protect these APIs
 }
