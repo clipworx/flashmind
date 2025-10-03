@@ -1,4 +1,5 @@
-// app/api/auth/login/route.ts
+export const runtime = 'nodejs'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/db'
 import { User } from '@/models/User'
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
         path: '/',
         sameSite: 'strict',
     })
-    
+
     return res
   } catch (err) {
     return NextResponse.json({ error: 'Failed to login' }, { status: 500 })
