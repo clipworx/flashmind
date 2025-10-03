@@ -31,11 +31,31 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<Params
   await connectDB()
   
   try {
-    const body = await req.json()
-    const deck = await Deck.findByIdAndUpdate(id, body, { new: true })
-    if (!deck) {
-      return NextResponse.json({ message: 'Deck not found' }, { status: 404 })
+
+    // get authenticated user
+    const user = await getUserFromCookie()
+    if (!user) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
+
+    const body = await req.json()
+
+    // remove `createdBy` from update body if present (prevent hijack)
+    if ('createdBy' in body) {
+      delete body.createdBy
+    }
+
+    // update only if deck belongs to user
+    const deck = await Deck.findOneAndUpdate(
+      { _id: id, createdBy: user.userId },
+      body,
+      { new: true }
+    )
+
+    if (!deck) {
+      return NextResponse.json({ message: 'Deck not found or unauthorized' }, { status: 404 })
+    }
+
     return NextResponse.json(deck)
   } catch (error) {
     return NextResponse.json({ message: 'Error updating deck' }, { status: 500 })

@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -7,6 +5,7 @@ import FlashMindNavBar from '@/components/FlashCards/FlashMindNavBar'
 import ToastContainer from '@/components/Notifications/ToastContainer'
 import { cookies } from 'next/headers'
 
+export const dynamic = "force-dynamic"; // 👈 forces server-rendering
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,12 +38,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* {hasToken.then(res => res && (
+        {hasToken.then(res => res && (
           <>
             <FlashMindNavBar />
             <ToastContainer />
           </>
-        )).catch(() => null)} */}
+        )).catch(() => null)}
 
         <main className="p-6">{children}</main>
       </body>
