@@ -1,12 +1,7 @@
-import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
 import { jwtVerify } from 'jose'
 
-const SECRET = process.env.JWT_SECRET || 'your-secret'
 const secret2 = new TextEncoder().encode(process.env.JWT_SECRET)
-export function signToken(payload: object) {
-  return jwt.sign(payload, SECRET, { expiresIn: '7d' })
-}
 
 export async function verifyToken(token: string) {
   try {
