@@ -34,9 +34,10 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {token && <FlashMindNavBar />}
+        {/* {token && <FlashMindNavBar />}
         {token && <ToastContainer />}
-        <main className="p-6">{children}</main>
+        <main className="p-6">{children}</main> */}
+        sdkljaskldjaslkd
       </body>
     </html>
   );
