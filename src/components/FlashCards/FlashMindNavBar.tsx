@@ -3,12 +3,23 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { useToastStore } from '@/stores/toastStore'
 
 const navItems = [
   { label: 'Home', href: '/home' },
   { label: 'Decks', href: '/decks' },
   { label: 'Create', href: '/decks/create' }
 ]
+
+const handleLogout = async () => {
+  const res = await fetch('/api/auth/logout', { method: 'POST' })
+  if(res.ok) {
+    window.location.href = '/auth/login'
+  }
+  else {
+    console.error('Logout failed')
+  }
+}
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -35,6 +46,12 @@ export default function Navbar() {
               {label}
             </Link>
           ))}
+          <a
+            onClick={handleLogout}
+            className="button text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
+          >
+            Logout
+          </a>
         </div>
       </div>
     </nav>
