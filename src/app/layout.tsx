@@ -4,6 +4,9 @@ import "./globals.css";
 import FlashMindNavBar from '@/components/FlashCards/FlashMindNavBar'
 import ToastContainer from '@/components/Notifications/ToastContainer'
 import { cookies } from 'next/headers'
+
+export const dynamic = "force-dynamic"; // 👈 forces server-rendering
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -21,19 +24,19 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const token = (await cookies()).get("token")?.value;
 
-  const token = (await cookies()).get('token')?.value
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-          {token && <FlashMindNavBar />}
-          {token && <ToastContainer />}
-          <main className="p-6">{children}</main>
+        {token && <FlashMindNavBar />}
+        {token && <ToastContainer />}
+        <main className="p-6">{children}</main>
       </body>
     </html>
   );
