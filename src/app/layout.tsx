@@ -31,7 +31,6 @@ export default function RootLayout({
     const token = (await cookies()).get("token")?.value;
     if(!token) return false;
     return true;
-
   }
   const hasToken = checkToken()
   return (
@@ -39,12 +38,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {hasToken.then(res => res && (
+        {/* {hasToken.then(res => res && (
           <>
             <FlashMindNavBar />
             <ToastContainer />
           </>
-        )).catch(() => null)}
+        )).catch(() => null)} */}
 
         <main className="p-6">{children}</main>
       </body>
