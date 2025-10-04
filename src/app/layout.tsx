@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DM_Mono, DM_Sans, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import FlashMindNavBar from '@/components/FlashCards/FlashMindNavBar'
 import ToastContainer from '@/components/Notifications/ToastContainer'
@@ -7,19 +7,25 @@ import { cookies } from 'next/headers'
 
 export const dynamic = "force-dynamic"; // 👈 forces server-rendering
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const sans = DM_Sans({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const sansMono = DM_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
+  weight: "300"
 });
 
 export const metadata: Metadata = {
   title: "Flashmind",
   description: "A flashcard app for learning",
+  icons: {
+    icon: '/flashmind-logo.svg',
+    shortcut: '/flashmind-logo.svg',
+    apple: '/flashmind-logo.svg',
+  },
 };
 
 export default function RootLayout({
@@ -36,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${sans.variable} ${sansMono.variable} antialiased`}
       >
         {hasToken.then(res => res && (
           <>

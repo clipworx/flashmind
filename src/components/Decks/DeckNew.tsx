@@ -33,7 +33,7 @@ export default function DeckNew() {
             }
             
             const created = await res.json()
-            console.log('Deck created:', created)
+            console.log('Deck created: successfully')
             notify({ message: 'Deck created successfully!', type: 'success' })
             // Redirect or show success message
             window.location.href = `/decks/${created._id}`

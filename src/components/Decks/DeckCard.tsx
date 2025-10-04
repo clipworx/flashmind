@@ -54,8 +54,8 @@ export default function DeckCard() {
     }
   }
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">My Decks</h1>
+    <div className="w-full p-6 max-w-4xl mx-auto items-center">
+      <h1 className="text-3xl font-bold mb-4 text-center">My Decks</h1>
 
       {loading && <p>Loading decks...</p>}
       {!loading && decks.length === 0 && <p>No decks found.</p>}
