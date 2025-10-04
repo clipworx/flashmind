@@ -10,9 +10,23 @@ type FlashcardProps = {
   onNext: (isCorrect: boolean) => void
 }
 
+const bgColors = [
+  'bg-[#c4ebff]',
+  'bg-[#fdd7c9]',
+  'bg-[#d3f2e2]',
+  'bg-[#e9e2fe]',
+  'bg-[#ffdcf0]',
+  'bg-[#fff0ca]',
+]
+
+const getRandomBgColor = () => {
+  return bgColors[Math.floor(Math.random() * bgColors.length)]
+}
+
 export default function Flashcard({ question, answer, className, onNext }: FlashcardProps) {
   const [flipped, setFlipped] = useState(false)
 
+  
   const handleNext = (isCorrect: boolean) => {
     setFlipped(false)
     setTimeout(() => {
@@ -21,10 +35,10 @@ export default function Flashcard({ question, answer, className, onNext }: Flash
   }
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className={`${getRandomBgColor()} w-full flex flex-col items-center px-1 py-1 rounded-lg gap-4`}>
       <div
         className={cn(
-          'w-full max-w-md h-64 perspective cursor-pointer',
+          'w-full h-64 max-h-[400px] perspective cursor-pointer',
           className
         )}
         onClick={() => setFlipped((prev) => !prev)}
@@ -48,7 +62,7 @@ export default function Flashcard({ question, answer, className, onNext }: Flash
       </div>
 
       {/* Answer Buttons */}
-      <div className="flex justify-center gap-4">
+      <div className="flex justify-center gap-4 pb-4">
         <button
           onClick={() => handleNext(true)}
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"

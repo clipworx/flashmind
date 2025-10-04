@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useToastStore } from '@/stores/toastStore'
-
+import { PencilSquareIcon, TrashIcon, DocumentDuplicateIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/solid'
 interface Flashcard {
   _id: number
   question: string
@@ -48,6 +48,10 @@ export default function DeckTable({ deckId }: { deckId: string }) {
     const handleEdit = (index: number) => {
         setEditCache({ question: rows[index].question, answer: rows[index].answer })
         setEditingIndex(index)
+    }
+
+    const handleDuplicate = (index: number) => {
+        console.log("Duplicating index:", index);
     }
 
     const handleUpdate = async (index: number, flashcardId: any) => {
@@ -178,24 +182,20 @@ export default function DeckTable({ deckId }: { deckId: string }) {
 
   return (
     <div>
-        <h2 className="text-xl font-semibold mb-2">Flashcards</h2>
-
         <table className="w-full table-fixed">
             <thead>
                 <tr>
-                    <th className="p-2 border w-[40px]">#</th>
-                    <th className="p-2 border w-2/5">Question</th>
-                    <th className="p-2 border w-2/5">Answer</th>
-                    <th className="p-2 border w-[120px]">Actions</th>
+                    <th className="p-2 border-b w-2/5">Question</th>
+                    <th className="p-2 border-b w-2/5">Answer</th>
+                    <th className="p-2 border-b w-[120px]"></th>
                 </tr>
             </thead>
 
         <tbody>
             {rows.map((fc, index) => (
                 <tr key={index}>
-                    <td className="p-2 border">{index + 1}</td>
 
-                    <td className="p-2 border">
+                    <td className="p-2 border-b border-gray-300">
                         {fc.isNew || editingIndex === index ? (
                             <textarea
                                 value={fc.question}
@@ -208,7 +208,7 @@ export default function DeckTable({ deckId }: { deckId: string }) {
                         )}
                         </td>
 
-                        <td className="p-2 border">
+                        <td className="p-2 border-b border-gray-300">
                             {fc.isNew || editingIndex === index ? (
                                 <textarea
                                     value={fc.answer}
@@ -222,20 +222,20 @@ export default function DeckTable({ deckId }: { deckId: string }) {
                         </td>
 
 
-                    <td className="p-2 border text-center align-top">
+                    <td className="p-2 text-center align-center border-b border-gray-300">
                         {fc.isNew ? (
                             <div className="flex gap-2 justify-center">
                                 <button
                                     onClick={() => handleSave(index)}
                                     className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 text-sm transition"
                                 >
-                                    Save
+                                    <CheckIcon className="h-4 w-4" />
                                 </button>
                                 <button
                                     onClick={() => handleCancel(index)}
-                                    className="bg-gray-300 text-black px-2 py-1 rounded hover:bg-gray-400 text-sm transition"
+                                    className="bg-red-400 text-white px-2 py-1 rounded hover:bg-red-500 text-sm transition"
                                 >
-                                    Cancel
+                                    <XMarkIcon className="h-4 w-4" />
                                 </button>
                             </div>
                         ) : editingIndex === index ? (
@@ -244,13 +244,13 @@ export default function DeckTable({ deckId }: { deckId: string }) {
                                     onClick={() => handleUpdate(index, fc._id)}
                                     className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 text-sm transition"
                                 >
-                                    Update
+                                    <CheckIcon className="h-4 w-4" />
                                 </button>
                                 <button
                                     onClick={() => handleCancelEdit()}
-                                    className="bg-gray-300 text-black px-2 py-1 rounded hover:bg-gray-400 text-sm transition"
+                                    className="bg-red-400 text-white px-2 py-1 rounded hover:bg-red-500 text-sm transition"
                                 >
-                                    Cancel
+                                    <XMarkIcon className="h-4 w-4" />
                                 </button>
                             </div>
                         ) : (
@@ -259,13 +259,19 @@ export default function DeckTable({ deckId }: { deckId: string }) {
                                     onClick={() => handleEdit(index)}
                                     className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm transition"
                                 >
-                                    Edit
+                                    <PencilSquareIcon className="h-4 w-4" />
+                                </button>
+                                <button
+                                    onClick={() => handleDuplicate(index)}
+                                    className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm transition"
+                                >
+                                    <DocumentDuplicateIcon className="h-4 w-4" />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(index, fc._id)}
                                     className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm transition"
                                 >
-                                    Delete
+                                    <TrashIcon className="h-4 w-4" />
                                 </button>
                             </div>
                         )}
@@ -277,9 +283,9 @@ export default function DeckTable({ deckId }: { deckId: string }) {
 
     <button
         onClick={handleAddRow}
-        className="mt-4 bg-gray-100 px-4 py-2 rounded hover:bg-gray-200 transition text-black"
+        className="mt-4 bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 transition text-black"
     >
-        + Add Row
+        Add Row
     </button>
     {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -297,8 +303,5 @@ export default function DeckTable({ deckId }: { deckId: string }) {
     )}
     </div>
   )
-}
-function setLoading(arg0: boolean) {
-    throw new Error('Function not implemented.')
 }
 

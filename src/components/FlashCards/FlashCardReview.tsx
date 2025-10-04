@@ -72,7 +72,7 @@ export default function FlashCardReview() {
         Card {currentIndex + 1} of {flashcards.length}
       </p>
 
-      <div className="border rounded-xl p-6 shadow text-center">
+      <div className="rounded-xl shadow text-center">
         <Flashcard
           question={currentCard.question}
           answer={currentCard.answer}
