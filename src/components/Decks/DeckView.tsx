@@ -6,6 +6,7 @@ import { useEffect, useState, use} from 'react'
 import { useParams } from 'next/navigation'
 import { useToastStore } from '@/stores/toastStore'
 import { PencilSquareIcon,CheckCircleIcon,XCircleIcon } from '@heroicons/react/24/solid'
+import { Tooltip } from 'react-tooltip'
 
 export default function DeckView() {
   const params = useParams()
@@ -13,12 +14,14 @@ export default function DeckView() {
     _id: string
     title: string
     description: string
+    flashcards?: string[]
   }
 
   const [deck, setDeck] = useState<Deck>({
     _id: '',
     title: '',
     description: '',
+    flashcards: [],
   })
   useEffect(() => {
     const fetchDeck = async () => {
@@ -74,7 +77,6 @@ export default function DeckView() {
   };
 
   const handleSaveDescription = async () => {
-    console.log("Updated description:", description);
 
     const response = await fetch(`/api/decks/${deck._id}`, {
       method: 'PUT',
@@ -104,14 +106,19 @@ export default function DeckView() {
               className="border border-gray-300 rounded p-2 flex-1 min-h-10 text-4xl font-bold tracking-tighter"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              maxLength={30}
             />
             <button
+              data-tooltip-id="tooltip"
+              data-tooltip-content="Save Title"
               onClick={handleSaveTitle}
               className='text-green-400'
             >
               <CheckCircleIcon className="size-6"/>
             </button>
             <button
+              data-tooltip-id="tooltip"
+              data-tooltip-content="Cancel Edit"
               onClick={handleCancelTitle}
               className='text-red-400'
             >
@@ -122,6 +129,8 @@ export default function DeckView() {
           <div className="flex items-center justify-left tracking-tighter">
             <h2 className="text-4xl font-bold mx-2 text-gray-700">{deck.title}</h2>
             <button
+              data-tooltip-id="tooltip"
+              data-tooltip-content="Edit Title"
               onClick={handleEditTitle}
               className='text-gray-500'
             >
@@ -139,15 +148,20 @@ export default function DeckView() {
               className="border border-gray-300 rounded p-2 flex-1 min-h-20 max-h-20 text-lg text-gray-700"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              maxLength={100}
             />
             <div className="flex flex-col space-y-2">
               <button
+                data-tooltip-id="tooltip"
+                data-tooltip-content="Save Description"
                 onClick={handleSaveDescription}
                 className='text-green-500'
               >
                 <CheckCircleIcon className="size-6"/>
               </button>
               <button
+                data-tooltip-id="tooltip"
+                data-tooltip-content="Cancel Edit"
                 onClick={handleCancelDescription}
                 className='text-red-500'
               >
@@ -159,6 +173,8 @@ export default function DeckView() {
           <div className="flex justify-left items-center mb-2 mx-2">
             <p className="text-gray-600 text-lg ">{deck.description}</p>
             <button
+              data-tooltip-id="tooltip"
+              data-tooltip-content="Edit Description"
               onClick={handleEditDescription}
               className="text-gray-400 ml-4"
             >
@@ -171,13 +187,18 @@ export default function DeckView() {
 
       <div className="flex gap-4 mb-6">
         <Link
-          href={`/decks/${deck._id}/review`}
+          href={(deck.flashcards?.length === 0) ?  `/decks/${deck._id}` : `/decks/${deck._id}/review`}
           className="bg-[#c4ebff] text-black px-4 py-2 rounded-lg hover:bg-[#d7f1ff] transition"
         >
           Start Review
         </Link>
       </div>
       <DeckTable deckId={deck._id} />
+        <Tooltip 
+          id="tooltip" 
+          delayShow={300}
+          style={{fontSize: "0.7rem", padding: "4px 6px"}}
+      />
     </div>
   )
 }

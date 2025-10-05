@@ -1,8 +1,18 @@
 'use client'
 
 import Link from 'next/link'
+import React from "react";
 import { useEffect, useState } from 'react'
 import { useToastStore } from '@/stores/toastStore'
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@heroui/modal";
+
 type Deck = {
   _id: string
   title: string
@@ -23,11 +33,12 @@ const getRandomBgColor = () => {
 }
 
 export default function DeckCard() {
-
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [decks, setDecks] = useState<Deck[]>([])
   const [loading, setLoading] = useState(true)
   const [deckColors, setDeckColors] = useState<{[key: string]: string}>({})
   const notify = useToastStore(state => state.notify)
+  const [tempId, setTempId] = useState<string | null>(null)
   useEffect(() => {
       fetch(`/api/decks`)
         .then(res => res.json())
@@ -78,11 +89,21 @@ export default function DeckCard() {
       console.error('Failed to delete deck:', err)
     }
   }
+  
+  if (loading) {
+    return (
+      <div className="w-full p-6 max-w-4xl mx-auto flex flex-col items-center justify-center min-h-[400px]">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent absolute top-0 left-0"></div>
+        </div>
+        <p className="text-gray-600 mt-4 text-lg">Loading your decks...</p>
+      </div>
+    )
+  }
   return (
     <div className="w-full p-6 max-w-4xl mx-auto items-center">
       <h1 className="text-3xl font-bold mb-4 text-center tracking-tighter">My Decks</h1>
-
-      {loading && <p>Loading decks...</p>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {decks.map(deck => (
@@ -102,13 +123,16 @@ export default function DeckCard() {
               {openMenuId === deck._id && (
                 <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-md z-10 p-2">
                   <Link
-                    href={`/decks/${deck._id}/edit`}
+                    href={`/decks/${deck._id}`}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
                   >
                     Edit
                   </Link>
                   <a
-                    onClick={() => handleDelete(deck._id)}
+                    onClick={() => {
+                      setTempId(deck._id)
+                      onOpen()
+                    }}
                     className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded cursor-pointer"
                   >
                     Delete
@@ -136,6 +160,34 @@ export default function DeckCard() {
           </div>
         </Link>
       </div>
+          <Modal
+            isOpen={isOpen}
+            onOpenChange={onOpenChange}
+            placement={"center"}
+            backdrop={"blur"}
+            hideCloseButton={true}
+          >
+          <ModalContent className="max-w-lg w-full p-8">
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1 bg-gray-200 rounded-tl-lg rounded-tr-lg">Confirm Delete</ModalHeader>
+                <ModalBody className="space-y-4 max-h-96 overflow-y-auto bg-gray-200 text-black p-6 ">
+                  <p>
+                    Are you sure you want to delete this deck? This action cannot be undone.
+                  </p>
+                </ModalBody>
+                <ModalFooter className="bg-gray-200 rounded-b-lg items-center gap-4 justify-center">
+                  <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={() => handleDelete(tempId ? tempId : '')}>
+                    Delete
+                  </button>
+                  <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={onClose}>
+                    Cancel
+                  </button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
     </div>
   )
 }

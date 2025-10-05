@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useToastStore } from '@/stores/toastStore'
 import { PencilSquareIcon, TrashIcon, DocumentDuplicateIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { Tooltip } from 'react-tooltip';
+
 interface Flashcard {
   _id: number
   question: string
@@ -48,10 +50,6 @@ export default function DeckTable({ deckId }: { deckId: string }) {
     const handleEdit = (index: number) => {
         setEditCache({ question: rows[index].question, answer: rows[index].answer })
         setEditingIndex(index)
-    }
-
-    const handleDuplicate = (index: number) => {
-        console.log("Duplicating index:", index);
     }
 
     const handleUpdate = async (index: number, flashcardId: any) => {
@@ -226,12 +224,17 @@ export default function DeckTable({ deckId }: { deckId: string }) {
                         {fc.isNew ? (
                             <div className="flex gap-2 justify-center">
                                 <button
+                                    data-tooltip-id="tooltip"
+                                    data-tooltip-content="Save Flashcard"
                                     onClick={() => handleSave(index)}
                                     className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 text-sm transition"
                                 >
                                     <CheckIcon className="h-4 w-4" />
                                 </button>
+                                
                                 <button
+                                    data-tooltip-id="tooltip"
+                                    data-tooltip-content="Cancel Flashcard"
                                     onClick={() => handleCancel(index)}
                                     className="bg-red-400 text-white px-2 py-1 rounded hover:bg-red-500 text-sm transition"
                                 >
@@ -241,12 +244,16 @@ export default function DeckTable({ deckId }: { deckId: string }) {
                         ) : editingIndex === index ? (
                             <div className="flex gap-2 justify-center">
                                 <button
+                                    data-tooltip-id="tooltip"
+                                    data-tooltip-content="Save Flashcard"
                                     onClick={() => handleUpdate(index, fc._id)}
                                     className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 text-sm transition"
                                 >
                                     <CheckIcon className="h-4 w-4" />
                                 </button>
                                 <button
+                                    data-tooltip-id="tooltip"
+                                    data-tooltip-content="Cancel Edit"
                                     onClick={() => handleCancelEdit()}
                                     className="bg-red-400 text-white px-2 py-1 rounded hover:bg-red-500 text-sm transition"
                                 >
@@ -256,18 +263,24 @@ export default function DeckTable({ deckId }: { deckId: string }) {
                         ) : (
                             <div className="flex gap-2 justify-center">
                                 <button
+                                    data-tooltip-id="tooltip"
+                                    data-tooltip-content="Edit Flashcard"
                                     onClick={() => handleEdit(index)}
                                     className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm transition"
                                 >
                                     <PencilSquareIcon className="h-4 w-4" />
                                 </button>
                                 <button
-                                    onClick={() => handleDuplicate(index)}
+                                    data-tooltip-id="tooltip"
+                                    data-tooltip-content="Duplicate Flashcard"
+                                    onClick={() => handleSave(index)}
                                     className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm transition"
                                 >
                                     <DocumentDuplicateIcon className="h-4 w-4" />
                                 </button>
                                 <button
+                                    data-tooltip-id="tooltip"
+                                    data-tooltip-content="Delete Flashcard"
                                     onClick={() => handleDelete(index, fc._id)}
                                     className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm transition"
                                 >
@@ -301,6 +314,11 @@ export default function DeckTable({ deckId }: { deckId: string }) {
             </div>
         </div>
     )}
+    <Tooltip 
+        id="tooltip" 
+        delayShow={300}
+        style={{fontSize: "0.7rem", padding: "4px 6px"}}
+    />
     </div>
   )
 }

@@ -55,6 +55,7 @@ export default function DeckNew() {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            maxLength={30}
             className="mt-1 w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             required
           />
@@ -67,6 +68,7 @@ export default function DeckNew() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
+            maxLength={100}
             className="mt-1 w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
           />
         </div>

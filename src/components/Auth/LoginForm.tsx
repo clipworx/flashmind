@@ -61,10 +61,19 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
         >
           {loading ? 'Logging in...' : 'Login'}
         </button>
+        <div className='flex justify-between items-center'>
+          <a
+            href="/auth/register"
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors text-center"
+          >
+            Register
+          </a>
+        </div>
+        
       </form>
     </div>
   )
