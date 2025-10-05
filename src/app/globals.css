@@ -5,11 +5,13 @@
   --foreground: #171717;
 }
 
-@theme inline {
+/* common theme variables (moved from unsupported @theme rule) */
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* fallback font vars in case custom fonts are not loaded */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono";
 }
 
 /* for dark mode */
@@ -39,4 +41,39 @@ body {
 }
 .rotate-y-180 {
   transform: rotateY(180deg);
+}
+
+/* Smooth scrolling for in-page anchors and programmatic scrolls */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mobile menu open/close animations */
+.mobile-menu {
+  transition: max-height 280ms cubic-bezier(.22,.98,.35,1), opacity 200ms ease, transform 400ms cubic-bezier(.22,.98,.35,1);
+  max-height: 0;
+  opacity: 0;
+  transform-origin: top center;
+  transform: translateY(-6px) scaleY(0.98);
+}
+.mobile-menu.open {
+  max-height: 480px; /* enough to show the menu */
+  opacity: 1;
+  transform: translateY(0) scaleY(1);
+}
+.mobile-menu.closed {
+  pointer-events: none;
+}
+
+/* subtle link reveal */
+.mobile-menu a {
+  transition: transform 220ms cubic-bezier(.2,.9,.3,1), opacity 200ms ease;
+}
+.mobile-menu.open a {
+  transform: translateX(0);
+  opacity: 1;
+}
+.mobile-menu.closed a {
+  transform: translateX(-8px);
+  opacity: 0;
 }

@@ -74,7 +74,7 @@ export default function DeckNew() {
         </div>
 
         {/* Tags */}
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium text-gray-700">Tags</label>
           <div className="flex gap-2 mt-1">
             <input
@@ -92,7 +92,7 @@ export default function DeckNew() {
               Add
             </button>
           </div>
-          {/* Show tags */}
+          
           <div className="mt-2 flex flex-wrap gap-2">
             {tags.map((tag) => (
               <span
@@ -103,7 +103,7 @@ export default function DeckNew() {
               </span>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Submit */}
         <div>

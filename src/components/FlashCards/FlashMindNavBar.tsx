@@ -64,12 +64,12 @@ export default function Navbar() {
         </div>
 
         {/* Mobile menu button */}
-        <div className="md:hidden flex items-center">
+        <div className="md:hidden flex items-center gap-4">
           <button
             onClick={() => setOpen((s) => !s)}
             aria-expanded={open}
             aria-label={open ? 'Close menu' : 'Open menu'}
-            className="p-2 rounded-md bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="p-2 rounded-md bg-gray-100 hover:bg-gray-200"
           >
             {open ? (
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -84,31 +84,32 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu panel */}
-      {open && (
-        <div className="md:hidden bg-white border-t border-gray-200">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2">
-            {navItems.map(({ label, href }) => (
-              <Link
-                key={href}
-                href={href}
-                className={cn(
-                  pathname === href && 'text-[#5891b3] font-semibold',
-                  'text-base hover:text-blue-600 transition-colors block px-2 py-2 rounded'
-                )}
-              >
-                {label}
-              </Link>
-            ))}
-            <button
-              onClick={handleLogout}
-              className="bg-red-400 text-white px-3 py-2 text-base hover:bg-red-600 font-semibold rounded transition-colors mt-1"
+      {/* Mobile menu panel - always rendered so we can animate open/close */}
+      <div
+        className={cn('md:hidden bg-white overflow-hidden mobile-menu', open ? 'open' : 'closed')}
+        aria-hidden={!open}
+      >
+        <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2">
+          {navItems.map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                pathname === href && 'text-[#5891b3] font-semibold',
+                'text-base hover:text-blue-600 transition-colors block px-2 py-2 rounded'
+              )}
             >
-              Logout
-            </button>
-          </div>
+              {label}
+            </Link>
+          ))}
+          <button
+            onClick={handleLogout}
+            className="bg-red-400 text-white px-3 py-2 text-base hover:bg-red-600 font-semibold rounded transition-colors mt-1"
+          >
+            Logout
+          </button>
         </div>
-      )}
+      </div>
     </nav>
   )
 }
